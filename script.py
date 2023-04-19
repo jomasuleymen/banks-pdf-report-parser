@@ -5,6 +5,8 @@ import pdfplumber
 
 from kk_transliterate import translit
 
+path_pdf = './data.pdf'
+
 
 def write_to_file(data, file_name):
     with open(f'./reports/{file_name}', 'w', encoding="utf-8") as outfile:
@@ -123,8 +125,6 @@ def parse_by_name(data):
 
     write_to_file(parsed_data, 'report_by_name.json')
 
-
-path_pdf = './data.pdf'
 
 data = get_data_from_pdf(path_pdf)
 
