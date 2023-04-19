@@ -3,7 +3,6 @@ import json
 
 import pdfplumber
 
-from kk_transliterate import translit
 
 path_pdf = './data.pdf'
 
@@ -34,9 +33,6 @@ def parse_sum(str_data):
     return float(str_data)
 
 
-def parse_name_to_eng(name):
-    return translit(name)
-
 
 def get_data_from_pdf(path_pdf):
     data = []
@@ -64,7 +60,7 @@ def get_data_from_pdf(path_pdf):
                 data.append({
                     'date': date,
                     'sum': sum,
-                    'name': parse_name_to_eng(name_contragent)
+                    'name': name_contragent
                 })
 
     return data
