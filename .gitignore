@@ -5,6 +5,7 @@ reports/
 *$py.class
 
 *.json
+*.pdf
 
 # C extensions
 *.so

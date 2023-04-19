@@ -124,7 +124,7 @@ def parse_by_name(data):
     write_to_file(parsed_data, 'report_by_name.json')
 
 
-path_pdf = './data_week.pdf'
+path_pdf = './data.pdf'
 
 data = get_data_from_pdf(path_pdf)
 
