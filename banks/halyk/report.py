@@ -20,9 +20,18 @@ class HalykReportParser:
 
     @classmethod
     def parse_sum(self, str_data: str):
-        str_data = str_data.replace(" ", "")
-        str_data = str_data.replace(",", ".")
-        return float(str_data)
+        # Keep only digits, commas, dots, and minus sign (only if at the start)
+        str_data = str_data.strip()
+        negative = str_data.startswith('-')
+        # Remove all characters except digits, commas, and dots
+        cleaned = ''.join(c for c in str_data if c.isdigit() or c in [',', '.'])
+        cleaned = cleaned.replace(',', '.')
+        if negative:
+            cleaned = '-' + cleaned
+        try:
+            return float(cleaned)
+        except ValueError:
+            return 0.0
 
     @classmethod
     def parse_report(self, file_path, dest_path):

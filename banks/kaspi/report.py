@@ -36,7 +36,8 @@ class KaspiReportParser:
         with pdfplumber.open(file_path) as pdf:
             for page_data in pdf.pages:
                 table = page_data.extract_table()
-
+                if not table:
+                    continue
                 for row in table:
                     trx_data: KaspiReport = KaspiReport()
 

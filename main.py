@@ -1,6 +1,7 @@
 import os
 from banks.bank_report_parser import BankReportParser
 from banks.bcc.report import BCCReportParser
+from banks.freedom.report import FreedomReportParser
 from banks.forte.report import ForteReportParser
 from banks.halyk.report import HalykReportParser
 from banks.jusan.report import JusanReportParser
@@ -42,8 +43,8 @@ def create_excel_reports_folder(account_name, year):
 
 
 if __name__ == "__main__":
-    account_name = "joma"
-    year = "2023"
+    account_name = "kusher"
+    year = "2024"
 
     create_excel_reports_folder(account_name, year)
 
@@ -53,35 +54,41 @@ if __name__ == "__main__":
         # get file name without extension
         bank_name = bank_file_name.split(".")[0]
 
-        if bank_name == "kaspi":
-            # parse report and save into folder
-            data = KaspiReportParser.parse_report(
-                get_full_path_of_bank_report(account_name, year, bank_file_name),
-                get_full_path_of_excel_report(account_name, year, bank_name),
-            )
+        # if "каспий" in bank_name.lower():
+        #     # parse report and save into folder
+        #     data = KaspiReportParser.parse_report(
+        #         get_full_path_of_bank_report(account_name, year, bank_file_name),
+        #         get_full_path_of_excel_report(account_name, year, bank_name),
+        #     )
 
-        # if bank_name == "halyk":
+        # if "халык" in bank_name.lower():
         #     # parse report and save into folder
         #     data = HalykReportParser.parse_report(
         #         get_full_path_of_bank_report(account_name, year, bank_file_name),
         #         get_full_path_of_excel_report(account_name, year, bank_name),
         #     )
 
-        # if bank_name == "forte":
+        # if "форте" in bank_name.lower():
         #     # parse report and save into folder
         #     data = ForteReportParser.parse_report(
         #         get_full_path_of_bank_report(account_name, year, bank_file_name),
         #         get_full_path_of_excel_report(account_name, year, bank_name),
         #     )
-        # if bank_name == "jusan":
+        # if "жусан" in bank_name.lower():
         #     # parse report and save into folder
         #     data = JusanReportParser.parse_report(
         #         get_full_path_of_bank_report(account_name, year, bank_file_name),
         #         get_full_path_of_excel_report(account_name, year, bank_name),
         #     )
-        # if bank_name == "bcc":
+        # if "бцк" in bank_name.lower():
         #     # parse report and save into folder
         #     data = BCCReportParser.parse_report(
         #         get_full_path_of_bank_report(account_name, year, bank_file_name),
         #         get_full_path_of_excel_report(account_name, year, bank_name),
         #     )
+        if "фридом" in bank_name.lower():
+            # parse report and save into folder
+            data = FreedomReportParser.parse_report(
+                get_full_path_of_bank_report(account_name, year, bank_file_name),
+                get_full_path_of_excel_report(account_name, year, bank_name),
+            )

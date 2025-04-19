@@ -25,12 +25,19 @@ class BCCReportParser:
             return None
 
     @classmethod
-    def parse_num(self, str_data: str):
-        str_data = str_data.replace(" ", "")
-        str_data = str_data.replace(",", ".")
-        str_data = str_data.replace("\n", "")
-
-        return float(str_data)
+    def parse_sum(self, str_data: str):
+        # Keep only digits, commas, dots, and minus sign (only if at the start)
+        str_data = str_data.strip()
+        negative = str_data.startswith('-')
+        # Remove all characters except digits, commas, and dots
+        cleaned = ''.join(c for c in str_data if c.isdigit() or c in [',', '.'])
+        cleaned = cleaned.replace(',', '.')
+        if negative:
+            cleaned = '-' + cleaned
+        try:
+            return float(cleaned)
+        except ValueError:
+            return 0.0
 
     @classmethod
     def parse_sum_fiat(self, str_data: str):
@@ -39,9 +46,7 @@ class BCCReportParser:
         sumStr = splitted[0].strip()
         fiat = splitted[1].strip()
 
-        sumStr = sumStr.replace(" ", "")
-        sumStr = sumStr.replace(",", ".")
-        return float(sumStr), fiat
+        return self.parse_sum(sumStr), fiat
 
     @classmethod
     def parse_report(self, file_path, dest_path):
@@ -51,40 +56,54 @@ class BCCReportParser:
             for page_data in pdf.pages:
                 tables = page_data.extract_tables(
                     table_settings={
-                        "explicit_vertical_lines": [
-                            30,
-                            110,
-                            154,
-                            367,
-                            440,
-                            495,
-                            550,
-                            590,
-                        ],
+                        "explicit_vertical_lines": [30, 112, 158, 340, 420, 480, 530, 580],
                     }
                 )
 
                 for table in tables:
+                    date_processing_idx = None
+                    date_carry_out_idx = None
+                    # Find the first row with two valid dates and set their indices
                     for row in table:
-                        # # if column count is not 4, then skip this row
-                        if len(row) != 7:
-                            continue
+                        for i in range(len(row)):
+                            if date_processing_idx is None:
+                                if self.get_date(row[i]):
+                                    date_processing_idx = i
+                                    continue
+                            elif date_carry_out_idx is None and i != date_processing_idx:
+                                if self.get_date(row[i]):
+                                    date_carry_out_idx = i
+                                    break
+                        if date_processing_idx is not None and date_carry_out_idx is not None:
+                            break
+                    # If not found, fallback to default indices
+                    if date_processing_idx is None:
+                        date_processing_idx = 0
+                    if date_carry_out_idx is None:
+                        date_carry_out_idx = 1
 
+                    for row in table:
                         # parse date, if date is not valid, then skip this row
-                        date_processing = self.get_date(row[0])
+                        date_processing = self.get_date(row[date_processing_idx])
                         if not date_processing:
                             continue
 
                         # parse date, if date is not valid, then skip this row
-                        date_carry_out = self.get_date(row[1])
+                        date_carry_out = self.get_date(row[date_carry_out_idx])
                         if not date_carry_out:
                             continue
 
-                        details = " ".join(row[2].split())
-                        sum, fiat = self.parse_sum_fiat(row[3])
-                        sum_in_kzt = self.parse_num(row[4])
-                        comission = self.parse_num(row[5])
-                        cashback = self.parse_num(row[6])
+                        # The rest of the columns are assumed to be in the same order as before
+                        # Adjust indices if necessary
+                        # We'll build a new row with the correct order for details, sum, etc.
+                        # Assume details is the next column after the last date
+                        other_indices = [i for i in
+                         range(len(row)) if i not in [date_processing_idx, date_carry_out_idx]]
+                        details = " ".join((row[other_indices[0]] or "").split())
+                        sum, fiat = self.parse_sum_fiat(row[other_indices[1]] or "")
+                        sum_in_kzt = self.parse_sum(row[other_indices[2]] or "")
+                        comission = self.parse_sum(row[other_indices[3]] or "")
+                        cashback = self.parse_sum(row[other_indices[4]] or "")
 
                         trx_data = BCCReport(
                             date_processing=date_processing,

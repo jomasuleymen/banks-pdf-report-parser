@@ -18,7 +18,7 @@ def debug():
         image = page.to_image(resolution=350)
         image.debug_tablefinder(
             {
-                "explicit_vertical_lines": [30, 110, 154, 367, 440, 495, 550, 590],
+                "explicit_vertical_lines": [30, 112, 158, 340, 420, 480, 530, 580],
             }
         ).show()
 
@@ -48,7 +48,7 @@ def parse_tables():
         for page_data in pdf.pages:
             table_data = page_data.extract_table(
                 table_settings={
-                    "explicit_vertical_lines": [30, 154, 367, 440, 495, 550, 590],
+                    "explicit_vertical_lines": [28, 158, 367, 440, 495, 550, 590],
                 }
             )
 
