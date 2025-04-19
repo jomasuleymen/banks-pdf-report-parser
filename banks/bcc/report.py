@@ -100,7 +100,7 @@ class BCCReportParser:
                         other_indices = [i for i in
                          range(len(row)) if i not in [date_processing_idx, date_carry_out_idx]]
                         details = " ".join((row[other_indices[0]] or "").split())
-                        sum, fiat = self.parse_sum_fiat(row[other_indices[1]] or "")
+                        amount, fiat = self.parse_sum_fiat(row[other_indices[1]] or "")
                         sum_in_kzt = self.parse_sum(row[other_indices[2]] or "")
                         comission = self.parse_sum(row[other_indices[3]] or "")
                         cashback = self.parse_sum(row[other_indices[4]] or "")
@@ -109,12 +109,13 @@ class BCCReportParser:
                             date_processing=date_processing,
                             date_carry_out=date_carry_out,
                             details=details,
-                            sum=sum,
+                            sum=amount,
                             fiat=fiat,
                             sum_in_kzt=sum_in_kzt,
                             comission=comission,
                             cashback=cashback,
                         )
+
                         transactions.append(trx_data)
 
         BCCExcelExporter.export_to_excel(transactions, dest_path)

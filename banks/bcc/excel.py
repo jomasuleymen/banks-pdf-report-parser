@@ -48,14 +48,14 @@ class BCCExcelExporter:
     def create_expenses_sheet(self, wb: Workbook, trxs: List[BCCReport]):
         sheet = wb.get_sheet_by_name("Выписка(Расходы)")
 
-        expenses_trxs = list(filter(lambda x: x.sum < 0, trxs))
+        expenses_trxs = list(filter(lambda x: x.sum_in_kzt < 0, trxs))
         self.put_trxs_to_sheet(sheet, expenses_trxs)
 
     @classmethod
     def create_income_sheet(self, wb: Workbook, trxs: List[BCCReport]):
         sheet = wb.get_sheet_by_name("Выписка(Приход)")
 
-        income_trxs = list(filter(lambda x: x.sum > 0, trxs))
+        income_trxs = list(filter(lambda x: x.sum_in_kzt > 0, trxs))
         self.put_trxs_to_sheet(sheet, income_trxs)
 
     @classmethod

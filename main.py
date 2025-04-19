@@ -80,15 +80,15 @@ if __name__ == "__main__":
         #         get_full_path_of_bank_report(account_name, year, bank_file_name),
         #         get_full_path_of_excel_report(account_name, year, bank_name),
         #     )
-        # if "бцк" in bank_name.lower():
-        #     # parse report and save into folder
-        #     data = BCCReportParser.parse_report(
-        #         get_full_path_of_bank_report(account_name, year, bank_file_name),
-        #         get_full_path_of_excel_report(account_name, year, bank_name),
-        #     )
-        if "фридом" in bank_name.lower():
+        if "бцк" in bank_name.lower():
             # parse report and save into folder
-            data = FreedomReportParser.parse_report(
+            data = BCCReportParser.parse_report(
                 get_full_path_of_bank_report(account_name, year, bank_file_name),
                 get_full_path_of_excel_report(account_name, year, bank_name),
             )
+        # if "фридом" in bank_name.lower():
+        #     # parse report and save into folder
+        #     data = FreedomReportParser.parse_report(
+        #         get_full_path_of_bank_report(account_name, year, bank_file_name),
+        #         get_full_path_of_excel_report(account_name, year, bank_name),
+        #     )
